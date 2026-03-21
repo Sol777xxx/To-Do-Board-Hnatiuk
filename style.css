@@ -71,3 +71,19 @@ button {
     background: #e8f4ff;
     outline: 2px dashed #88b;
 }
+
+.input-error {
+    outline: 2px solid #e00;
+    animation: shake 0.3s ease;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+}
+
+button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}

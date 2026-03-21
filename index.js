@@ -71,13 +71,25 @@ Object.values(columns).forEach((col) => {
 
 function addTask() {
   const text = input.value.trim();
-  if (!text) return;
+
+  if (!text) {
+    input.classList.add("input-error");
+    setTimeout(() => input.classList.remove("input-error"), 600);
+    return;
+  }
+
   addTaskToColumn(text, columns.current);
   saveTasks();
   input.value = "";
+  input.focus();
 }
 
 button.addEventListener("click", addTask);
 input.addEventListener("keydown", (e) => { if (e.key === "Enter") addTask(); });
+
+input.addEventListener("input", () => {
+  button.disabled = input.value.trim() === "";
+});
+button.disabled = true;
 
 loadTasks();
