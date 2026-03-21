@@ -6,12 +6,15 @@ const DragDrop = {
         col.classList.add("drag-over");
       });
       col.addEventListener("dragleave", () => col.classList.remove("drag-over"));
-      col.addEventListener("drop", () => {
-        const dragging = document.querySelector(".dragging");
-        if (dragging) col.appendChild(dragging);
-        col.classList.remove("drag-over");
-        onDrop();
-      });
+    col.addEventListener("drop", () => {
+    const dragging = document.querySelector(".dragging");
+    if (dragging) {
+      Logger.log("task moved to", col.id);
+      col.appendChild(dragging);
+    }
+    col.classList.remove("drag-over");
+    onDrop();
+    });
     });
   },
 
