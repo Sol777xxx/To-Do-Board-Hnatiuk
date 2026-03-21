@@ -5,6 +5,7 @@ const columns = {
   future: document.getElementById("future"),
   done: document.getElementById("done"),
 };
+const MAX_LENGTH = 50;
 
 function saveTasks() {
   const tasks = [];
@@ -69,6 +70,17 @@ Object.values(columns).forEach((col) => {
   });
 });
 
+function showError(msg) {
+  const err = document.getElementById("errorMsg");
+  err.textContent = msg;
+  setTimeout(() => err.textContent = "", 2000);
+}
+
+function isDuplicate(text) {
+  return Array.from(document.querySelectorAll(".task-text"))
+    .some(el => el.textContent.trim().toLowerCase() === text.toLowerCase());
+}
+
 function addTask() {
   const text = input.value.trim();
 
@@ -78,17 +90,38 @@ function addTask() {
     return;
   }
 
+  if (text.length > MAX_LENGTH) {
+    showError(`Максимум ${MAX_LENGTH} символів`);
+    return;
+  }
+
+  if (isDuplicate(text)) {
+    showError("Така задача вже існує!");
+    input.classList.add("input-error");
+    setTimeout(() => input.classList.remove("input-error"), 600);
+    return;
+  }
+
   addTaskToColumn(text, columns.current);
   saveTasks();
   input.value = "";
   input.focus();
+  document.getElementById("charCount").textContent = `0 / ${MAX_LENGTH}`;
+  button.disabled = true;
 }
 
 button.addEventListener("click", addTask);
 input.addEventListener("keydown", (e) => { if (e.key === "Enter") addTask(); });
 
 input.addEventListener("input", () => {
-  button.disabled = input.value.trim() === "";
+  const len = input.value.trim().length;
+  button.disabled = len === 0;
+  document.getElementById("charCount").textContent = `${input.value.length} / ${MAX_LENGTH}`;
+  if (input.value.length > MAX_LENGTH) {
+    document.getElementById("charCount").style.color = "#e00";
+  } else {
+    document.getElementById("charCount").style.color = "#999";
+  }
 });
 button.disabled = true;
 
