@@ -14,7 +14,7 @@ function save() {
 }
 
 function showError(msg) {
-  errorMsg.textContent = "⚠️ " + msg;
+  errorMsg.textContent = "🚫" + msg;
   setTimeout(() => errorMsg.textContent = "", 2000);
 }
 
