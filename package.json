@@ -1,0 +1,11 @@
+{
+  "name": "to-do-board",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "node tests/validation.test.js",
+    "lint": "npx eslint js/*.js"
+  },
+  "devDependencies": {
+    "eslint": "^8.0.0"
+  }
+}
