@@ -14,7 +14,7 @@ function save() {
 }
 
 function showError(msg) {
-  errorMsg.textContent = "🚫" + msg;
+  errorMsg.textContent = "❌" + msg;
   setTimeout(() => errorMsg.textContent = "", 2000);
 }
 
@@ -22,6 +22,7 @@ function addTaskToColumn(text, column) {
   const task = Tasks.create(text, save);
   DragDrop.bindTask(task, save);
   column.appendChild(task);
+  Logger.log("task rendered", text);
 }
 
 function addTask() {
@@ -45,6 +46,7 @@ function addTask() {
   }
 
   addTaskToColumn(text, columns.current);
+  Logger.log("task added", text);
   save();
   input.value = "";
   input.focus();

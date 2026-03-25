@@ -13,7 +13,11 @@ create(text, onSave) {
     const del = document.createElement("button");
     del.className = "delete-btn";
     del.textContent = "✕";
-    del.onclick = () => { task.remove(); onSave(); };
+    del.onclick = () => { 
+    Logger.log("task deleted", span.textContent);
+    task.remove(); 
+    onSave(); 
+};
 
     task.appendChild(span);
     task.appendChild(del);
