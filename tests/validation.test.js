@@ -13,8 +13,8 @@ function validate(text) {
 assert.strictEqual(validate(""), "empty");
 console.log("✅ Test 1 passed: empty string returns 'empty'");
 
-// Тест 2 — навмисно зламаний
-assert.strictEqual(validate("a".repeat(51)), null); // ❌ має бути "toolong"
+// Тест 2 — навмисно зламаний та виправлений
+assert.strictEqual(validate("a".repeat(51)), "toolong");
 console.log("✅ Test 2 passed: long string returns 'toolong'");
 
 // Тест 3 — валідний текст
