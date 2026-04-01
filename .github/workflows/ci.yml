@@ -27,3 +27,8 @@ jobs:
 
       - name: Security scan
         run: npm audit --audit-level=moderate
+      
+      - name: Static analysis
+        run: |
+          pip install njsscan
+          njsscan js/ || true
