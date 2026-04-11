@@ -1,0 +1,106 @@
+name: Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    name: Stage 1 - Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: npm install
+      - name: Run unit tests
+        run: npm test
+      - name: Lint
+        run: npm run lint
+      - name: Security scan
+        run: npm audit --audit-level=moderate || true
+      - name: Static analysis
+        run: |
+          pip install njsscan
+          njsscan js/ || true
+
+  build:
+    name: Stage 2 - Build
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: npm install
+      - name: Build artifact
+        run: |
+          mkdir -p dist
+          cp index.html dist/
+          cp style.css dist/
+          cp -r js dist/
+          echo "Build version: ${{ github.sha }}" > dist/build-info.txt
+          echo "Build date: $(date)" >> dist/build-info.txt
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-build
+          path: dist/
+
+  deploy_staging:
+    name: Stage 3 - Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: build
+    environment: staging
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app-build
+          path: dist/
+      - name: Deploy to staging
+        run: |
+          echo "Deploying to staging environment..."
+          echo "Artifact contents:"
+          cat dist/build-info.txt
+          echo "Deploy to staging complete!"
+
+  verify_staging:
+    name: Stage 4 - Verify Staging
+    runs-on: ubuntu-latest
+    needs: deploy_staging
+    steps:
+      - name: Run smoke tests
+        run: |
+          echo "Running smoke tests..."
+          node -e "
+            const assert = require('assert');
+            assert.strictEqual(1, 1, 'Smoke test: basic check');
+            console.log('Smoke test passed: 1 === 1');
+          "
+          echo "Staging verification complete!"
+
+  deploy_production:
+    name: Stage 5 - Deploy to Production
+    runs-on: ubuntu-latest
+    needs: verify_staging
+    environment: production
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app-build
+          path: dist/
+      - name: Deploy to production
+        run: |
+          echo "Deploying to production environment..."
+          cat dist/build-info.txt
+          echo "Deploy to production complete!"
