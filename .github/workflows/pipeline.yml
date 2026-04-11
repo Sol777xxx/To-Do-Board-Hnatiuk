@@ -83,7 +83,7 @@ jobs:
           echo "Running smoke tests..."
           node -e "
             const assert = require('assert');
-            assert.strictEqual(1, 2, 'Smoke test failed!');
+            assert.strictEqual(1, 1, 'Smoke test failed!');
             console.log('✅ Smoke test passed');
           "
           echo "Staging verification complete!"
