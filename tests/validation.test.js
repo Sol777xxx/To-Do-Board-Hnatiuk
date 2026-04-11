@@ -13,7 +13,7 @@ function validate(text) {
 assert.strictEqual(validate(""), "empty");
 console.log("✅ Test 1 passed: empty string returns 'empty'");
 
-// Тест 2 — навмисно зламаний та виправлений
+// Тест 2 — Знову навмисно зламаний і полагоджений
 assert.strictEqual(validate("a".repeat(51)), "toolong");
 console.log("✅ Test 2 passed: long string returns 'toolong'");
 
